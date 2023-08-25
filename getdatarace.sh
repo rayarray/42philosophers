@@ -1,5 +1,5 @@
 #/bin/sh
-rm ./errorlog
+if [[ -f ./errorlog ]]; then rm ./errorlog; fi
 FILESIZE=0
 let loops=0
 while [ $FILESIZE -eq 0 ]

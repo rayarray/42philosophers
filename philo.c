@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 15:22:17 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 17:28:49 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ void	*supervisor(void *arg)
 	i = 0;
 	while (checkmutex(t->brn, PHILO_SATED, NULL) > 0)
 	{
+		//printf("super loop start\n");
 		pthread_mutex_lock(&t->m_die);
-		if ((t->brn + i)->lastmeal.tv_sec != 0 && (t->brn + i)->meals != 0
+		if ((t->brn + i)->lastmeal.tv_sec != 0
+			&& (t->brn + i)->meals != t->times_to_eat
 			&& get_ms_diff(&(t->brn + i)->lastmeal, &now, 1) > t->t_starve)
 		{
+			//printf("died\n");
 			add_log_msg(t->brn + i, PHILO_DEAD, 0);
 			(t->brn + i)->alive = 0;
 			break ;
@@ -52,8 +55,14 @@ void	*philosopher(void *arg)
 		add_log_msg(b, PHILO_THINKING, 0);
 		if (b->meals > 0 && b->t_think > 0)
 			rsleep(b->t_think);
+		//int i = 0;
 		while (!getforks(b, 0) && checkmutex(b, PHILO_DEAD, NULL))
-			;
+		{
+			//printf("didn't get forks %d\n", i++);
+			if (checkmutex(b, PHILO_ORDER66, NULL) == 1)
+				pthread_exit(NULL);
+			usleep(50);
+		}
 		checkmutex(b, PHILO_DEAD, &b->lastmeal);
 		add_log_msg(b, PHILO_EATING, b->meals);
 		rsleep(b->t_eat);
@@ -109,14 +118,15 @@ int	init_table(t_table *t, char **ag, int ac)
 		t->times_to_eat = read_args(ag, 5);
 	if (ac == 6)
 		t->brn->times_to_eat = &t->times_to_eat;
+	t->t_starve = read_args(ag, 2);
 	t->brn->t_eat = read_args(ag, 3);
 	t->brn->t_slp = read_args(ag, 4);
-	t->t_starve = read_args(ag, 2);
 	t->brn->log = init_log(t->seats);
 	if (t->brn->log == NULL)
 		return (0);
 	t->brn->m_log = &t->m_log;
 	t->brn->m_die = &t->m_die;
+	t->brn->m_stop = &t->m_stop;
 	return (1);
 }
 
@@ -133,6 +143,7 @@ int	main(int ac, char **ag)
 			usleep(250);
 	}
 	pthread_join(tbl.superv, NULL);
+	stopall(&tbl, 0);
 	ac = tbl.seats;
 	while (--ac >= 0)
 		pthread_join(*(tbl.phl + ac), NULL);

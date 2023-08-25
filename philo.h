@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:41:38 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 15:49:51 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 17:18:03 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,15 @@ typedef struct s_table {
 // philo_utils1.c
 
 t_brain	*make_brain(int nbr, t_brain *b, pthread_mutex_t *f, int last);
-int		getforks(t_brain *b, int lock);
+int		getforks(t_brain *b, int err);
 int		dropforks(t_brain *b);
+void	stopall(t_table *t, int i);
 
 // philo_utils2.c
 
 int		read_args(char **ag, int n);
 int		chk_args(int ac, char **ag);
-int		checkmutex(t_brain *b, int status, void *time);
+int		checkmutex(t_brain *b, int status, struct timeval *time);
 int		get_ms_diff(struct timeval *t1, struct timeval *t2, int now);
 void	rsleep(int ms);
 

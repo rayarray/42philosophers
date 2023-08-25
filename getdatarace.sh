@@ -8,7 +8,7 @@ do
 #	FILESIZE=$(stat -c%s "./errorlog")
 	FILESIZE=$(stat -f%z "./errorlog")
 	let loops++
-	printf $FILESIZE
+	//printf $FILESIZE
 	let divten=loops%10
 	if [ $divten -eq 0 ]; then 
 		printf " $loops " > ./loops

@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 19:26:11 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 13:39:01 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 18:56:13 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	choose_msg(t_logmsg *msg)
 	else if (msg->type == 33)
 		print_msg(msg, " is SATED\n");
 	else if (msg->type == 4)
-		print_msg(msg, " is dead\n");
+		print_msg(msg, " died\n");
 	else if (msg->type == 5)
 		print_msg(msg, " has taken a fork\n");
 	else if (msg->type == 6)

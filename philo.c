@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 17:28:49 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 19:23:03 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	*supervisor(void *arg)
 
 	t = (t_table *)arg;
 	i = 0;
+	checkmutex(t->brn, PHILO_START, NULL);
 	while (checkmutex(t->brn, PHILO_SATED, NULL) > 0)
 	{
 		//printf("super loop start\n");
@@ -30,8 +31,8 @@ void	*supervisor(void *arg)
 			&& get_ms_diff(&(t->brn + i)->lastmeal, &now, 1) > t->t_starve)
 		{
 			//printf("died\n");
-			add_log_msg(t->brn + i, PHILO_DEAD, 0);
 			(t->brn + i)->alive = 0;
+			add_log_msg(t->brn + i, PHILO_DEAD, 0);
 			break ;
 		}
 		pthread_mutex_unlock(&t->m_die);
@@ -47,9 +48,11 @@ void	*philosopher(void *arg)
 	t_brain	*b;
 
 	b = (t_brain *)arg;
+	checkmutex(b, PHILO_START, NULL);
 	gettimeofday(&(b->start), NULL);
 	gettimeofday(&(b->lastmeal), NULL);
-	checkmutex(b, PHILO_SATED, NULL);
+	if (b->t_think == 0 && b->name % 2 == 0)
+		usleep(100);
 	while (checkmutex(b, PHILO_DEAD, NULL))
 	{
 		add_log_msg(b, PHILO_THINKING, 0);
@@ -91,7 +94,7 @@ int	commence_philosophy(t_table *t, int i)
 		printf("Mutex creation error\n");
 	while (--i >= 0)
 		make_brain(i, t->brn, t->frk, t->seats - 1);
-	pthread_mutex_lock(&t->m_log);
+	pthread_mutex_lock(&t->m_stop);
 	while (++i < t->seats)
 	{
 		if (pthread_create(t->phl + i, NULL, philosopher, t->brn + i))
@@ -99,7 +102,7 @@ int	commence_philosophy(t_table *t, int i)
 	}
 	if (pthread_create(&t->superv, NULL, supervisor, t))
 		printf("Supervisor thread creation failed\n");
-	pthread_mutex_unlock(&t->m_log);
+	pthread_mutex_unlock(&t->m_stop);
 	usleep(250);
 	return (1);
 }

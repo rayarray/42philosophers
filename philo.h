@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:41:38 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 17:18:03 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 19:05:46 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define PHILO_DEAD		4
 # define PHILO_LFORK	5
 # define PHILO_RFORK	6
+# define PHILO_START	66
 # define PHILO_ORDER66	66
 
 # define LOGSIZE	5000

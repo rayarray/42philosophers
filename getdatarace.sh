@@ -10,9 +10,12 @@ do
 	let loops++
 	printf $FILESIZE
 	let divten=loops%10
-	if [ $divten -eq 0 ]; then printf " $loops "; fi
-	let divten=loops%50
-	if [[ $divten -eq 0 ]]; then printf "\n"; fi
+	if [ $divten -eq 0 ]; then 
+		printf " $loops " > ./loops
+		date > ./lastrun
+	fi
+#	let divten=loops%50
+#	if [[ $divten -eq 0 ]]; then printf "\n"; fi
 done
 echo
 echo $loops

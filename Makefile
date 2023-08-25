@@ -6,7 +6,7 @@
 #    By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 16:29:22 by rleskine          #+#    #+#              #
-#    Updated: 2023/08/25 23:15:03 by rleskine         ###   ########.fr        #
+#    Updated: 2023/08/25 23:22:45 by rleskine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,7 @@ NAME		=	philo
 #BONUS		=	checker
 SRC			=	philo_utils1.c philo_utils2.c log_utils1.c log_utils2.c
 OBJ			=	$(SRC:.c=.o)
-CFLAGS		=	-Wall -Wextra -Werror -pthread 
-# -fsanitize=thread
+CFLAGS		=	-Wall -Wextra -Werror -pthread -fsanitize=thread
 # remove fsanitize to make leaks work
 NPROCS 		=	$(shell sysctl hw.ncpu | grep -o '[0-9]\+')
 

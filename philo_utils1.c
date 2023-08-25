@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 18:32:40 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 18:58:29 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 21:49:39 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_brain	*make_brain(int nbr, t_brain *b, pthread_mutex_t *f, int last)
 		(b + nbr)->right = f + nbr + 1;
 	else
 		(b + nbr)->right = f;
-	(b + nbr)->meals = b->meals;
+	(b + nbr)->meals = 0;
 	(b + nbr)->times_to_eat = b->times_to_eat;
 	(b + nbr)->alive = 1;
 	(b + nbr)->m_log = b->m_log;
@@ -31,6 +31,8 @@ t_brain	*make_brain(int nbr, t_brain *b, pthread_mutex_t *f, int last)
 	(b + nbr)->t_slp = b->t_slp;
 	if (last % 2 == 0 && b->t_slp < b->t_eat * 2)
 		(b + nbr)->t_think = b->t_eat * 2 - b->t_slp;
+	else if (last % 2 == 0)
+		(b + nbr)->t_think = 1;
 	return (b + nbr);
 }
 
@@ -53,17 +55,22 @@ int	getforks(t_brain *b, int err)
 		return (0);
 	if (b->name % 2 == 0 && getfork(b, b->left, &err) < 1)
 		return (0);
+	if (b->name % 2 == 0)
+		add_log_msg(b, PHILO_LFORK, 0);
 	if (getfork(b, b->right, &err) < 1)
 	{
 		if (b->name % 2 == 0)
 			pthread_mutex_unlock(b->left);
 		return (0);
 	}
+	add_log_msg(b, PHILO_RFORK, 0);
 	if (b->name % 2 == 1 && getfork(b, b->left, &err) < 1)
 	{
 		pthread_mutex_unlock(b->right);
 		return (0);
 	}
+	if (b->name % 2 == 1)
+		add_log_msg(b, PHILO_LFORK, 0);
 	return (1);
 }
 
@@ -117,5 +124,9 @@ void	stopall(t_table *t, int i)
 		i++;
 	}
 	if (i < t->seats)
-		pthread_mutex_unlock(&t->m_die);
+	{
+		//pthread_mutex_lock(&t->m_die); //wtf
+		int ret = pthread_mutex_unlock(&t->m_die);
+		printf("unlock m_die returned %d\n", ret);
+	}
 }

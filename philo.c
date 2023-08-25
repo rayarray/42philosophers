@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 19:23:03 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 22:10:23 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	*supervisor(void *arg)
 	checkmutex(t->brn, PHILO_START, NULL);
 	while (checkmutex(t->brn, PHILO_SATED, NULL) > 0)
 	{
-		//printf("super loop start\n");
 		pthread_mutex_lock(&t->m_die);
 		if ((t->brn + i)->lastmeal.tv_sec != 0
 			&& (t->brn + i)->meals != t->times_to_eat
@@ -40,7 +39,8 @@ void	*supervisor(void *arg)
 			i = 0;
 		usleep(1000 / t->seats);
 	}
-	pthread_exit(NULL);
+	return (0); //pthread_exit(NULL);
+
 }
 
 void	*philosopher(void *arg)
@@ -51,12 +51,13 @@ void	*philosopher(void *arg)
 	checkmutex(b, PHILO_START, NULL);
 	gettimeofday(&(b->start), NULL);
 	gettimeofday(&(b->lastmeal), NULL);
-	if (b->t_think == 0 && b->name % 2 == 0)
-		usleep(100);
+	//printf("philo %d t_think is %d\n", b->name, b->t_think);
+	if (b->t_think == 0 && b->name % 2 == 1)
+		rsleep(b->t_eat);
 	while (checkmutex(b, PHILO_DEAD, NULL))
 	{
 		add_log_msg(b, PHILO_THINKING, 0);
-		if (b->meals > 0 && b->t_think > 0)
+		if (b->meals > 0 && b->t_think > 1)
 			rsleep(b->t_think);
 		//int i = 0;
 		while (!getforks(b, 0) && checkmutex(b, PHILO_DEAD, NULL))
@@ -76,7 +77,7 @@ void	*philosopher(void *arg)
 		add_log_msg(b, PHILO_SLEEPING, 0);
 		rsleep(b->t_slp);
 	}
-	pthread_exit(NULL);
+	return (0); //pthread_exit(NULL);
 }
 
 //if (pthread_detach(*(t->phl + i)))

@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 19:26:11 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 18:56:13 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 20:28:49 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ void	choose_msg(t_logmsg *msg)
 		print_msg(msg, " has taken a fork\n");
 }
 
-void	philo_sated(t_log *log, pthread_mutex_t *mtx)
+void	philo_sated(t_log *log, pthread_mutex_t *m_log)
 {
-	pthread_mutex_lock(mtx);
+	pthread_mutex_lock(m_log);
 	log->sated--;
-	pthread_mutex_unlock(mtx);
+	pthread_mutex_unlock(m_log);
 }
 
 int	print_log(t_log *log, pthread_mutex_t *m_log)

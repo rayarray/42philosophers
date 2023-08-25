@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:41:38 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 19:05:46 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/25 21:44:54 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_brain {
 	struct timeval		start;
 	struct timeval		lastmeal;
 	struct timeval		now;
-	int					meals;
+	volatile int		meals;
 	int					*times_to_eat;
 	int					alive;
 	pthread_mutex_t		*m_log;

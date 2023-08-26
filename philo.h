@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:41:38 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 17:03:20 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 18:48:42 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,12 @@
 # define PHILO_ORDER66	66
 
 # define PHILO_FINISH	1
-//# define CHECK_DEATH	4
 # define CHK_M_DIE		4
 # define SET_EAT_TIMER	4
 # define CHECK_FINISH	3
 # define CHK_M_LOG		3
-//# define CHECK_STOP		66
 # define CHK_M_STOP		66
 # define CHECK_START	66
-//# define CHK_STOP_START	66
 
 # define LOGSIZE	20000
 

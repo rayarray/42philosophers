@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:53:29 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 16:44:51 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 13:16:36 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,22 @@ int	chk_args(int ac, char **ag)
 
 int	checkmutex(t_brain *b, int status, struct timeval *time)
 {
-	if (status == PHILO_DEAD)
+	if (status == CHECK_DEATH)
 	{
 		pthread_mutex_lock(b->m_die);
 		if (time && ++b->meals)
 			gettimeofday(time, NULL);
 		return (1 + (pthread_mutex_unlock(b->m_die) * 0));
 	}
-	else if (status == PHILO_SATED || status == PHILO_EATING)
+	else if (status == CHECK_FINISH || status == PHILO_FINISH)
 	{
 		pthread_mutex_lock(b->m_log);
-		if (status == PHILO_EATING)
+		if (status == PHILO_FINISH)
 			b->log->sated--;
 		status = b->log->sated;
 		return (status + (pthread_mutex_unlock(b->m_log) * 0));
 	}
-	else if (status == PHILO_ORDER66)
+	else if (status == CHK_STOP_START)
 	{
 		pthread_mutex_lock(b->m_stop);
 		status = b->stop;

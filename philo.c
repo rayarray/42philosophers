@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 22:10:23 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 12:42:38 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,14 @@ void	*supervisor(void *arg)
 
 	t = (t_table *)arg;
 	i = 0;
-	checkmutex(t->brn, PHILO_START, NULL);
-	while (checkmutex(t->brn, PHILO_SATED, NULL) > 0)
+	checkmutex(t->brn, CHECK_START, NULL);
+	while (checkmutex(t->brn, CHECK_FINISH, NULL) > 0)
 	{
 		pthread_mutex_lock(&t->m_die);
 		if ((t->brn + i)->lastmeal.tv_sec != 0
 			&& (t->brn + i)->meals != t->times_to_eat
 			&& get_ms_diff(&(t->brn + i)->lastmeal, &now, 1) > t->t_starve)
 		{
-			//printf("died\n");
 			(t->brn + i)->alive = 0;
 			add_log_msg(t->brn + i, PHILO_DEAD, 0);
 			break ;
@@ -39,8 +38,7 @@ void	*supervisor(void *arg)
 			i = 0;
 		usleep(1000 / t->seats);
 	}
-	return (0); //pthread_exit(NULL);
-
+	return (0);
 }
 
 void	*philosopher(void *arg)
@@ -48,26 +46,23 @@ void	*philosopher(void *arg)
 	t_brain	*b;
 
 	b = (t_brain *)arg;
-	checkmutex(b, PHILO_START, NULL);
+	checkmutex(b, CHECK_START, NULL);
 	gettimeofday(&(b->start), NULL);
 	gettimeofday(&(b->lastmeal), NULL);
-	//printf("philo %d t_think is %d\n", b->name, b->t_think);
 	if (b->t_think == 0 && b->name % 2 == 1)
 		rsleep(b->t_eat);
-	while (checkmutex(b, PHILO_DEAD, NULL))
+	while (checkmutex(b, CHECK_DEATH, NULL))
 	{
 		add_log_msg(b, PHILO_THINKING, 0);
 		if (b->meals > 0 && b->t_think > 1)
 			rsleep(b->t_think);
-		//int i = 0;
-		while (!getforks(b, 0) && checkmutex(b, PHILO_DEAD, NULL))
+		while (!getforks(b, 0) && checkmutex(b, CHECK_DEATH, NULL))
 		{
-			//printf("didn't get forks %d\n", i++);
-			if (checkmutex(b, PHILO_ORDER66, NULL) == 1)
+			if (checkmutex(b, CHECK_STOP, NULL) == 1)
 				pthread_exit(NULL);
 			usleep(50);
 		}
-		checkmutex(b, PHILO_DEAD, &b->lastmeal);
+		checkmutex(b, EATING, &b->lastmeal);
 		add_log_msg(b, PHILO_EATING, b->meals);
 		rsleep(b->t_eat);
 		dropforks(b);
@@ -77,7 +72,7 @@ void	*philosopher(void *arg)
 		add_log_msg(b, PHILO_SLEEPING, 0);
 		rsleep(b->t_slp);
 	}
-	return (0); //pthread_exit(NULL);
+	return (0);
 }
 
 //if (pthread_detach(*(t->phl + i)))

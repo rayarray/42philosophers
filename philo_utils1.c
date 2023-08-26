@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 18:32:40 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/25 21:49:39 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 12:37:48 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	getfork(t_brain *b, pthread_mutex_t *fork, int *err)
 	*err = pthread_mutex_lock(fork);
 	if (*err)
 		return (printf("MUTEX LOCK ERROR %d\n", *err) * 0);
-	if (checkmutex(b, PHILO_ORDER66, NULL))
+	if (checkmutex(b, CHECK_STOP, NULL))
 	{
 		pthread_mutex_unlock(fork);
 		return (-1);

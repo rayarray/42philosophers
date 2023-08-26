@@ -6,7 +6,7 @@
 #    By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 16:29:22 by rleskine          #+#    #+#              #
-#    Updated: 2023/08/25 23:22:45 by rleskine         ###   ########.fr        #
+#    Updated: 2023/08/26 13:13:43 by rleskine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME		=	philo
 #BONUS		=	checker
 SRC			=	philo_utils1.c philo_utils2.c log_utils1.c log_utils2.c
 OBJ			=	$(SRC:.c=.o)
-CFLAGS		=	-Wall -Wextra -Werror -pthread -fsanitize=thread
+CFLAGS		=	-Wall -Wextra -Werror -pthread -O0
+DFLAGS		=	-g -fsanitize=thread
 # remove fsanitize to make leaks work
 NPROCS 		=	$(shell sysctl hw.ncpu | grep -o '[0-9]\+')
 
@@ -23,11 +24,11 @@ CC =	cc
 all: $(NAME)
 
 $(NAME): %: %.c $(OBJ)
-	@$(CC) $(CFLAGS) -o $@ $< $(OBJ)
+	@$(CC) $(CFLAGS) $(DFLAGS) -o $@ $< $(OBJ)
 	@echo "\033[32m[$(NAME)]: compiled\033[0m"
 
 $(OBJ): %.o: %.c
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS) $(DFLAGS) -c -o $@ $<
 	@echo "\033[2K[$(NAME)]: Compilation of $< \033[A"
 
 #bonus: $(BONUS)

@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:53:29 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 15:39:43 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 20:55:28 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	read_args(char **ag, int n)
 	i = 0;
 	while (ag[n][i])
 	{
+		while (*ag[n] == 48 && *(ag[n] + 1) != 0)
+			ag[n]++;
 		if (ag[n][i] < 48 || ag[n][i] > 57)
 			return (-1);
 		i++;
@@ -47,14 +49,15 @@ int	chk_args(int ac, char **ag)
 		return (-1);
 	}
 	if (read_args(ag, 1) == -1 || read_args(ag, 2) == -1
-		|| read_args(ag, 3) == -1 || read_args(ag, 4) == -1)
+		|| read_args(ag, 3) == -1 || read_args(ag, 4) == -1 ||
+		(ac == 6 && read_args(ag, 5) == -1))
 	{
 		printf("Invalid argument. Numeric values [0-9] up to MAX_INT only!\n");
 		return (-1);
 	}
-	if (ac == 6 && read_args(ag, 5) == -1)
+	if (read_args(ag, 3) == 0 || read_args(ag, 4) == 0)
 	{
-		printf("Invalid argument. Numeric values [0-9] up to MAX_INT only!\n");
+		printf("0 is unsafe value for time_to_sleep and time_to_eat. Exiting\n");
 		return (-1);
 	}
 	return (1);
@@ -64,7 +67,8 @@ int	checkmutex(t_brain *b, int status, struct timeval *time)
 {
 	if (status == CHK_M_DIE)
 	{
-		pthread_mutex_lock(b->m_die);
+		if (pthread_mutex_lock(b->m_die))
+			printf("MUTEX LOCK FAIL\n");
 		if (time && ++b->meals)
 			gettimeofday(time, NULL);
 		return (1 + (pthread_mutex_unlock(b->m_die) * 0));

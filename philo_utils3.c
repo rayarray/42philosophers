@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 14:30:00 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 17:44:01 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 18:53:53 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	philoinit(t_brain *b)
 
 t_brain	*philostart(t_brain *b)
 {
+	philoinit(b);
 	if (!checkmutex(b, CHK_M_DIE, NULL))
 		return (NULL);
 	add_log_msg(b, PHILO_THINKING, 0);

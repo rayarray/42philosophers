@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 19:26:11 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 14:12:23 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 17:39:52 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void	philo_sated(t_log *log, pthread_mutex_t *m_log)
 int	print_log(t_log *log, pthread_mutex_t *m_log)
 {
 	pthread_mutex_lock(m_log);
-	//if (log->lines == 0 || log->lines == LOGSIZE)
-	//	return (1 + (pthread_mutex_unlock(m_log) * 0));
 	log->lines2 = log->lines;
 	log->i = log->l;
 	log->l = log->l2;

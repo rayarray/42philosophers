@@ -6,13 +6,13 @@
 #    By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 16:29:22 by rleskine          #+#    #+#              #
-#    Updated: 2023/08/26 13:13:43 by rleskine         ###   ########.fr        #
+#    Updated: 2023/08/26 17:50:01 by rleskine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	philo
 #BONUS		=	checker
-SRC			=	philo_utils1.c philo_utils2.c log_utils1.c log_utils2.c
+SRC			=	philo_utils1.c philo_utils2.c philo_utils3.c log_utils1.c log_utils2.c
 OBJ			=	$(SRC:.c=.o)
 CFLAGS		=	-Wall -Wextra -Werror -pthread -O0
 DFLAGS		=	-g -fsanitize=thread

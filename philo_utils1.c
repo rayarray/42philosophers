@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 18:32:40 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 12:37:48 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 17:21:10 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	getfork(t_brain *b, pthread_mutex_t *fork, int *err)
 	*err = pthread_mutex_lock(fork);
 	if (*err)
 		return (printf("MUTEX LOCK ERROR %d\n", *err) * 0);
-	if (checkmutex(b, CHECK_STOP, NULL))
+	if (checkmutex(b, CHK_M_STOP, NULL))
 	{
 		pthread_mutex_unlock(fork);
 		return (-1);
@@ -52,7 +52,7 @@ int	getfork(t_brain *b, pthread_mutex_t *fork, int *err)
 int	getforks(t_brain *b, int err)
 {
 	if (b->left == b->right)
-		return (0);
+		return (usleep(50) * 0);
 	if (b->name % 2 == 0 && getfork(b, b->left, &err) < 1)
 		return (0);
 	if (b->name % 2 == 0)
@@ -73,32 +73,6 @@ int	getforks(t_brain *b, int err)
 		add_log_msg(b, PHILO_LFORK, 0);
 	return (1);
 }
-
-// int	getforks(t_brain *b, int lock)
-// {
-// 	if (b->left == b->right)
-// 		return (0);
-// 	if (b->name % 2 == 1)
-// 	{
-// 		lock = pthread_mutex_lock(b->right);
-// 		if (lock)
-// 			printf("P%d: Error code %d when locking mutex\n", b->name, lock);
-// 		if (checkmutex(b, PHILO_ORDER66, NULL))
-// 			return (pthread_mutex_unlock(b->right) * 0);
-// 	}
-// 	lock = pthread_mutex_lock(b->left);
-// 	if (lock)
-// 		printf("P%d: Error code %d when locking mutex\n", b->name, lock);
-// 	if (checkmutex(b, PHILO_ORDER66, NULL))
-// 		return (pthread_mutex_unlock(b->left) * 0);
-// 	if (b->name % 2 == 0)
-// 	{
-// 		lock = pthread_mutex_lock(b->right);
-// 		if (lock)
-// 			printf("P%d: Error code %d when locking mutex\n", b->name, lock);
-// 	}
-// 	return (1);
-// }
 
 int	dropforks(t_brain *b)
 {
@@ -124,9 +98,5 @@ void	stopall(t_table *t, int i)
 		i++;
 	}
 	if (i < t->seats)
-	{
-		//pthread_mutex_lock(&t->m_die); //wtf
-		int ret = pthread_mutex_unlock(&t->m_die);
-		printf("unlock m_die returned %d\n", ret);
-	}
+		pthread_mutex_unlock(&t->m_die);
 }

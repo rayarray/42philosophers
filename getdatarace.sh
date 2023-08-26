@@ -1,12 +1,16 @@
 #/bin/sh
-#if [[ -f ./errorlog ]]; then rm ./errorlog; fi
 TESTDATE="$(date)"
 mkdir "$TESTDATE"
+if [[ -f ./philo ]]; then cp ./philo "./$TESTDATE/philo";
+else
+   rmdir "$TESTDATE"
+   return;
+fi
 FILESIZE=0
 let loops=0
 while [ $FILESIZE -eq 0 ]
 do
-	$(./philo 198 195 60 60 > /dev/null 2> "./$TESTDATE/errorlog")
+	$("./$TESTDATE/philo" 199 194 60 60 > /dev/null 2> "./$TESTDATE/errorlog")
 #	FILESIZE=$(stat -c%s "./errorlog")
 	FILESIZE=$(stat -f%z "./$TESTDATE/errorlog")
 	let loops++

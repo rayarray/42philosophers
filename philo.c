@@ -6,13 +6,12 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 12:42:38 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 17:20:57 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// use m_die to prevent data race
 void	*supervisor(void *arg)
 {
 	t_table			*t;
@@ -45,28 +44,22 @@ void	*philosopher(void *arg)
 {
 	t_brain	*b;
 
-	b = (t_brain *)arg;
-	checkmutex(b, CHECK_START, NULL);
-	gettimeofday(&(b->start), NULL);
-	gettimeofday(&(b->lastmeal), NULL);
-	if (b->t_think == 0 && b->name % 2 == 1)
-		rsleep(b->t_eat);
-	while (checkmutex(b, CHECK_DEATH, NULL))
+	b = philostart((t_brain *)arg);
+	if (b == NULL)
+		return (0);
+	while (checkmutex(b, CHK_M_DIE, NULL))
 	{
 		add_log_msg(b, PHILO_THINKING, 0);
 		if (b->meals > 0 && b->t_think > 1)
 			rsleep(b->t_think);
-		while (!getforks(b, 0) && checkmutex(b, CHECK_DEATH, NULL))
-		{
-			if (checkmutex(b, CHECK_STOP, NULL) == 1)
-				pthread_exit(NULL);
-			usleep(50);
-		}
-		checkmutex(b, EATING, &b->lastmeal);
+		while (!getforks(b, 0) && checkmutex(b, CHK_M_DIE, NULL))
+			if (checkmutex(b, CHK_M_STOP, NULL) == 1)
+				return (0);
+		checkmutex(b, SET_EAT_TIMER, &b->lastmeal);
 		add_log_msg(b, PHILO_EATING, b->meals);
 		rsleep(b->t_eat);
 		dropforks(b);
-		if (b->times_to_eat && *b->times_to_eat == b->meals
+		if (b->times_to_eat && *b->times_to_eat <= b->meals
 			&& add_log_msg(b, PHILO_SATED, 0))
 			break ;
 		add_log_msg(b, PHILO_SLEEPING, 0);
@@ -75,8 +68,6 @@ void	*philosopher(void *arg)
 	return (0);
 }
 
-//if (pthread_detach(*(t->phl + i)))
-//	printf("Thread detach failed\n");
 int	commence_philosophy(t_table *t, int i)
 {
 	while (i < t->seats)
@@ -148,7 +139,6 @@ int	main(int ac, char **ag)
 		pthread_join(*(tbl.phl + ac), NULL);
 	pthread_mutex_destroy(&tbl.m_die);
 	pthread_mutex_destroy(&tbl.m_log);
-	ac = -1;
 	while (++ac < tbl.seats)
 		pthread_mutex_destroy(tbl.frk + ac);
 	free(tbl.phl);

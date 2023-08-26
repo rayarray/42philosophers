@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:53:29 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 13:16:36 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/26 15:39:43 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ int	chk_args(int ac, char **ag)
 
 int	checkmutex(t_brain *b, int status, struct timeval *time)
 {
-	if (status == CHECK_DEATH)
+	if (status == CHK_M_DIE)
 	{
 		pthread_mutex_lock(b->m_die);
 		if (time && ++b->meals)
 			gettimeofday(time, NULL);
 		return (1 + (pthread_mutex_unlock(b->m_die) * 0));
 	}
-	else if (status == CHECK_FINISH || status == PHILO_FINISH)
+	else if (status == CHK_M_LOG || status == PHILO_FINISH)
 	{
 		pthread_mutex_lock(b->m_log);
 		if (status == PHILO_FINISH)
@@ -77,12 +77,11 @@ int	checkmutex(t_brain *b, int status, struct timeval *time)
 		status = b->log->sated;
 		return (status + (pthread_mutex_unlock(b->m_log) * 0));
 	}
-	else if (status == CHK_STOP_START)
+	else if (status == CHK_M_STOP)
 	{
 		pthread_mutex_lock(b->m_stop);
 		status = b->stop;
-		pthread_mutex_unlock(b->m_stop);
-		return (status);
+		return (status + (pthread_mutex_unlock(b->m_stop) * 0));
 	}
 	return (0);
 }

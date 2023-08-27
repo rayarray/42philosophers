@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 18:32:40 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/27 08:13:59 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/27 13:20:59 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,10 @@ int	dropforks(t_brain *b)
 
 void	stopall(t_table *t, int i)
 {
+	pthread_mutex_unlock(&t->m_exit);
+	pthread_join(t->superv, NULL);
 	pthread_mutex_lock(&t->m_stop);
 	while (i < t->seats)
 		(t->brn + i++)->stop = 1;
 	pthread_mutex_unlock(&t->m_stop);
-	i = 0;
-	while (i < t->seats)
-	{
-		if ((t->brn + i)->alive == 0)
-			break ;
-		i++;
-	}
-	//if (i < t->seats)
-	//	pthread_mutex_unlock(&t->m_die);
-	//pthread_mutex_unlock(&t->m_exit);
 }

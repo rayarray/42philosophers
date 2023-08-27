@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/27 08:15:00 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/27 13:18:55 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ int	main(int ac, char **ag)
 		pthread_join(*(tbl.phl + ac), NULL);
 	pthread_mutex_destroy(&tbl.m_die);
 	pthread_mutex_destroy(&tbl.m_log);
+	pthread_mutex_destroy(&tbl.m_exit);
 	while (++ac < tbl.seats)
 		pthread_mutex_destroy(tbl.frk + ac);
 	free(tbl.phl);

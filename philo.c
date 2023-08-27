@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/27 13:18:55 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/27 13:27:12 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,6 @@ int	main(int ac, char **ag)
 		while (print_log(tbl.brn->log, &tbl.m_log))
 			usleep(250);
 	}
-	pthread_mutex_unlock(&tbl.m_exit);
-	pthread_join(tbl.superv, NULL);
 	stopall(&tbl, 0);
 	ac = tbl.seats;
 	while (--ac >= 0)

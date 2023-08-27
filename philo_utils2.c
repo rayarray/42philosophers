@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 10:53:29 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/27 00:54:40 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/27 13:26:29 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int	chk_args(int ac, char **ag)
 		return (-1);
 	}
 	if (read_args(ag, 1) == -1 || read_args(ag, 2) == -1
-		|| read_args(ag, 3) == -1 || read_args(ag, 4) == -1 ||
-		(ac == 6 && read_args(ag, 5) == -1))
+		|| read_args(ag, 3) == -1 || read_args(ag, 4) == -1
+		|| (ac == 6 && read_args(ag, 5) == -1))
 	{
 		printf("Invalid argument. Numeric values [0-9] up to MAX_INT only!\n");
 		return (-1);

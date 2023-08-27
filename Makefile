@@ -15,8 +15,7 @@ NAME		=	philo
 SRC			=	philo_utils1.c philo_utils2.c philo_utils3.c log_utils1.c log_utils2.c
 OBJ			=	$(SRC:.c=.o)
 CFLAGS		=	-Wall -Wextra -Werror -pthread -O0
-DFLAGS		=	-g
-#-fsanitize=thread
+#DFLAGS		=	-g -fsanitize=thread
 # remove fsanitize to make leaks work
 NPROCS 		=	$(shell sysctl hw.ncpu | grep -o '[0-9]\+')
 

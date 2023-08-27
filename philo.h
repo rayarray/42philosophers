@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:41:38 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 18:48:42 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/27 07:47:59 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef struct s_brain {
 	pthread_mutex_t		*m_log;
 	pthread_mutex_t		*m_die;
 	pthread_mutex_t		*m_stop;
+	pthread_mutex_t		*m_exit;
 	int					stop;
 	t_logmsg			*msg;
 	t_log				*log;
@@ -90,6 +91,7 @@ typedef struct s_table {
 	pthread_mutex_t		m_die;
 	pthread_mutex_t		m_log;
 	pthread_mutex_t		m_stop;
+	pthread_mutex_t		m_exit;
 }	t_table;
 
 // philo_utils1.c
@@ -110,6 +112,7 @@ void	rsleep(int ms);
 // philo_utils3.c
 
 t_brain	*philostart(t_brain *b);
+void	*check_m_exit(t_brain *b, pthread_mutex_t *m_die);
 
 // log_utils1.c
 

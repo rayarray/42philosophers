@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 18:32:40 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 17:21:10 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/27 08:13:59 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_brain	*make_brain(int nbr, t_brain *b, pthread_mutex_t *f, int last)
 	(b + nbr)->m_log = b->m_log;
 	(b + nbr)->m_die = b->m_die;
 	(b + nbr)->m_stop = b->m_stop;
+	(b + nbr)->m_exit = b->m_exit;
 	(b + nbr)->log = b->log;
 	(b + nbr)->t_eat = b->t_eat;
 	(b + nbr)->t_slp = b->t_slp;
@@ -97,6 +98,7 @@ void	stopall(t_table *t, int i)
 			break ;
 		i++;
 	}
-	if (i < t->seats)
-		pthread_mutex_unlock(&t->m_die);
+	//if (i < t->seats)
+	//	pthread_mutex_unlock(&t->m_die);
+	//pthread_mutex_unlock(&t->m_exit);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rleskine <rleskine@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/24 16:56:39 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/26 17:20:57 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/27 08:15:00 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*supervisor(void *arg)
 			i = 0;
 		usleep(1000 / t->seats);
 	}
-	return (0);
+	return (check_m_exit(t->brn + i, &t->m_die));
 }
 
 void	*philosopher(void *arg)
@@ -65,7 +65,7 @@ void	*philosopher(void *arg)
 		add_log_msg(b, PHILO_SLEEPING, 0);
 		rsleep(b->t_slp);
 	}
-	return (0);
+	return (check_m_exit(b, NULL));
 }
 
 int	commence_philosophy(t_table *t, int i)
@@ -79,6 +79,8 @@ int	commence_philosophy(t_table *t, int i)
 		printf("Mutex creation error\n");
 	if (pthread_mutex_init(&t->m_stop, NULL))
 		printf("Mutex creation error\n");
+	if (pthread_mutex_init(&t->m_exit, NULL))
+		printf("Mutex creation error\n");
 	while (--i >= 0)
 		make_brain(i, t->brn, t->frk, t->seats - 1);
 	pthread_mutex_lock(&t->m_stop);
@@ -89,6 +91,7 @@ int	commence_philosophy(t_table *t, int i)
 	}
 	if (pthread_create(&t->superv, NULL, supervisor, t))
 		printf("Supervisor thread creation failed\n");
+	pthread_mutex_lock(&t->m_exit);
 	pthread_mutex_unlock(&t->m_stop);
 	usleep(250);
 	return (1);
@@ -117,6 +120,7 @@ int	init_table(t_table *t, char **ag, int ac)
 	t->brn->m_log = &t->m_log;
 	t->brn->m_die = &t->m_die;
 	t->brn->m_stop = &t->m_stop;
+	t->brn->m_exit = &t->m_exit;
 	return (1);
 }
 
@@ -132,6 +136,7 @@ int	main(int ac, char **ag)
 		while (print_log(tbl.brn->log, &tbl.m_log))
 			usleep(250);
 	}
+	pthread_mutex_unlock(&tbl.m_exit);
 	pthread_join(tbl.superv, NULL);
 	stopall(&tbl, 0);
 	ac = tbl.seats;
